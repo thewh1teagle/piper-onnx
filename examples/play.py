@@ -1,4 +1,6 @@
 """
+Note: on Linux you need to run this as well: apt-get install portaudio19-dev
+
 Setup
     uv pip install piper-onnx sounddevice
 
