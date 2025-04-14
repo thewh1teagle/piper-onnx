@@ -7,6 +7,7 @@ Use piper TTS with onnxruntime
 - Fast
 - Lightweight
 - User friendly
+- Support (Windows/Linux/macOS/Raspbian)
 
 ## Setup
 
