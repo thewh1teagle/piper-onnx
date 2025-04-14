@@ -1,0 +1,31 @@
+[project]
+name = "piper-onnx"
+version = "1.0.0"
+description = "Use piper TTS with onnxruntime"
+license = { file = "LICENSE" }
+readme = "README.md"
+authors = [
+    { name = "thewh1teagle", email = "61390950+thewh1teagle@users.noreply.github.com" }
+]
+requires-python = ">=3.10"
+dependencies = [
+    "espeakng-loader>=0.2.4",
+    "onnxruntime>=1.21.0",
+    "phonemizer-fork>=3.3.2"
+]
+
+[project.urls]
+Homepage = "https://github.com/thewh1teagle/piper-onnx"
+Repository = "https://github.com/thewh1teagle/piper-onnx"
+Issues = "https://github.com/thewh1teagle/piper-onnx/issues"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[dependency-groups]
+dev = [
+    "sounddevice>=0.5.1",
+    "soundfile>=0.13.1",
+]
+
