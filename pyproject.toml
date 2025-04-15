@@ -1,6 +1,6 @@
 [project]
 name = "piper-onnx"
-version = "1.0.0"
+version = "1.0.1"
 description = "Use piper TTS with onnxruntime"
 license = { file = "LICENSE" }
 readme = "README.md"
@@ -10,7 +10,7 @@ authors = [
 requires-python = ">=3.10"
 dependencies = [
     "espeakng-loader>=0.2.4",
-    "onnxruntime>=1.21.0",
+    "onnxruntime>=1.20.1",
     "phonemizer-fork>=3.3.2"
 ]
 

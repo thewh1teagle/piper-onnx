@@ -37,12 +37,15 @@ class Piper:
             self, 
             text: str, 
             speaker_id = 0, 
-            is_phonemes = False
+            is_phonemes = False,
+            length_scale: int = None,
+            noise_scale: int = None,
+            noise_w: int = None,
         ) -> tuple[NDArray[np.float32], int]:
         inference_cfg = self.config['inference']
-        length_scale = inference_cfg['length_scale']
-        noise_scale = inference_cfg['noise_scale']
-        noise_w = inference_cfg['noise_w']
+        length_scale = length_scale or inference_cfg['length_scale']
+        noise_scale = noise_scale or inference_cfg['noise_scale']
+        noise_w = noise_w or inference_cfg['noise_w']
         
         phonemes = text if is_phonemes else phonemize(text)
         phonemes = list(phonemes)
