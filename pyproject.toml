@@ -1,6 +1,6 @@
 [project]
 name = "piper-onnx"
-version = "1.0.2"
+version = "1.0.3"
 description = "Use piper TTS with onnxruntime"
 license = { file = "LICENSE" }
 readme = "README.md"

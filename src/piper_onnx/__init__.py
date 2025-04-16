@@ -24,6 +24,8 @@ class Piper:
             self.config: dict = json.load(fp)
         self.sample_rate: int = self.config['audio']['sample_rate']
         self.phoneme_id_map: dict = self.config['phoneme_id_map']
+        self._voices: dict = self.config.get('speaker_id_map')
+
         EspeakWrapper.set_library(espeakng_loader.get_library_path())
         EspeakWrapper.set_data_path(espeakng_loader.get_data_path())
         self.sess = ort.InferenceSession(
@@ -31,30 +33,38 @@ class Piper:
             sess_options=ort.SessionOptions(),
             providers=providers
         )
+        self.sess_inputs_names = [i.name for i in self.sess.get_inputs()]
 
     def create(
             self, 
             text: str, 
-            speaker_id = 0, 
+            speaker_id: str | int = None, 
             is_phonemes = False,
             length_scale: int = None,
             noise_scale: int = None,
             noise_w: int = None,
         ) -> tuple[NDArray[np.float32], int]:
+
         inference_cfg = self.config['inference']
         length_scale = length_scale or inference_cfg['length_scale']
         noise_scale = noise_scale or inference_cfg['noise_scale']
         noise_w = noise_w or inference_cfg['noise_w']
+        sid = speaker_id if isinstance(speaker_id, int) else self._voices[speaker_id]
         
         phonemes = text if is_phonemes else phonemize(text)
         phonemes = list(phonemes)
         phonemes.insert(0, _BOS)
 
         ids = self._phoneme_to_ids(phonemes)
-        inputs = self._create_input(ids, length_scale, noise_w, noise_scale, speaker_id)
+        
+        inputs = self._create_input(ids, length_scale, noise_w, noise_scale, sid)
+
         samples = self.sess.run(None, inputs)[0].squeeze((0,1)).squeeze()
         return samples, self.sample_rate
     
+    def get_voices(self) -> dict | None:
+        return self._voices
+
     def _phoneme_to_ids(self, phonemes: str) -> list[int]:
         ids = []
         for p in phonemes:
@@ -64,14 +74,17 @@ class Piper:
         ids.extend(self.phoneme_id_map[_EOS])
         return ids
     
-    def _create_input(self, ids, length_scale, noise_w, noise_scale, speaker_id) -> dict:
+    def _create_input(self, ids, length_scale, noise_w, noise_scale, sid) -> dict:
         ids = np.expand_dims(np.array(ids, dtype=np.int64), 0)
         length = np.array([ids.shape[1]], dtype=np.int64)
         scales = np.array([noise_scale, length_scale, noise_w],dtype=np.float32)
-        # speaker = np.array([speaker_id], dtype=np.int64) if speaker_id is not None else None
-        return {
+        
+        sid = np.array([sid], dtype=np.int64) if sid is not None else None
+        input = {
             'input': ids,
             'input_lengths': length,
             'scales': scales,
-            # 'sid': speaker
         }
+        if 'sid' in self.sess_inputs_names:
+            input['sid'] = sid
+        return input
