@@ -49,7 +49,12 @@ class Piper:
         length_scale = length_scale or inference_cfg['length_scale']
         noise_scale = noise_scale or inference_cfg['noise_scale']
         noise_w = noise_w or inference_cfg['noise_w']
-        sid = speaker_id if isinstance(speaker_id, int) else self._voices[speaker_id]
+
+        sid = 0
+        if isinstance(speaker_id, str) and speaker_id in self._voices:
+            sid = self._voices[speaker_id]
+        elif isinstance(speaker_id, int):
+            sid = speaker_id
         
         phonemes = text if is_phonemes else phonemize(text)
         phonemes = list(phonemes)
@@ -74,7 +79,7 @@ class Piper:
         ids.extend(self.phoneme_id_map[_EOS])
         return ids
     
-    def _create_input(self, ids, length_scale, noise_w, noise_scale, sid) -> dict:
+    def _create_input(self, ids: list[int], length_scale: int, noise_w: int, noise_scale: int, sid: int) -> dict:
         ids = np.expand_dims(np.array(ids, dtype=np.int64), 0)
         length = np.array([ids.shape[1]], dtype=np.int64)
         scales = np.array([noise_scale, length_scale, noise_w],dtype=np.float32)
