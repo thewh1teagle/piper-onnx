@@ -427,7 +427,7 @@ wheels = [
 
 [[package]]
 name = "piper-onnx"
-version = "1.0.3"
+version = "1.0.4"
 source = { editable = "." }
 dependencies = [
     { name = "espeakng-loader" },
@@ -444,7 +444,7 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "espeakng-loader", specifier = ">=0.2.4" },
-    { name = "onnxruntime", specifier = ">=1.20.1" },
+    { name = "onnxruntime", specifier = ">=1.20.0" },
     { name = "phonemizer-fork", specifier = ">=3.3.2" },
 ]
 
