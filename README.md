@@ -1,5 +1,7 @@
 # piper-onnx
 
+<img src="https://count.getloli.com/@count?name=count&theme=minecraft&padding=7&offset=0&align=top&scale=1&pixelated=1&darkmode=0">
+
 Use piper TTS with onnxruntime
 
 ## Features
